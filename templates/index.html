@@ -1,13 +1,25 @@
 <!doctype html>
 <html lang="en">
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
         <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" />
         <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
     </head>
     <body>
+        <nav>
+            <a href="http://first-news-app.readthedocs.org/">
+                <img src="{{ url_for('static', filename='irelogo.png') }}">
+            </a>
+        </nav>
+        <header>
+            <h1>These are the 60 people who died during the L.A. riots</h1>
+            <div class="byline">
+                By <a href="http://first-news-app.readthedocs.org/">The First News App Tutorial</a>
+            </div>
+        </header>
         <div id="map" style="width:100%; height:300px;"></div>
-        <h1>Deaths during the L.A. riots</h1>
         <table border=1 cellpadding=7 id="data">
         <thead>
             <tr>
@@ -61,7 +73,16 @@
                 {% endfor %}
               ]
             };
+            var blackIcon = L.Icon.extend({
+                options: {
+                    iconUrl: "{{ url_for('static', filename='marker-24.png') }}",
+                    iconSize: [24, 24]
+                }
+            });
             var dataLayer = L.geoJson(data, {
+                pointToLayer: function (feature, latlng) {
+                    return L.marker(latlng, {icon: new blackIcon()});
+                },
                 onEachFeature: function(feature, layer) {
                     layer.bindPopup(
                         '<a href="' + feature.properties.id + '/">' +
@@ -70,7 +91,7 @@
                     );
                 }
             });
-            map.addLayer(dataLayer);;
+            map.addLayer(dataLayer);
         </script>
         <script>
             $(document).ready(function () {
