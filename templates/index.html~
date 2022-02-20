@@ -16,7 +16,7 @@
             {% for obj in object_list %}
             <tr>
                 <td>{{ obj.full_name }}</td>
-                <td>{{ obj.date }}</td>
+                                <td>{{ obj.date }}</td>
                 <td>{{ obj.type }}</td>
                 <td>{{ obj.address }}</td>
                 <td>{{ obj.age }}</td>
