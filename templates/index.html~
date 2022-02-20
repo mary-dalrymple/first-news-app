@@ -2,12 +2,14 @@
 <html lang="en">
     <head>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css" />
         <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
     </head>
     <body>
         <div id="map" style="width:100%; height:300px;"></div>
         <h1>Deaths during the L.A. riots</h1>
-        <table border=1 cellpadding=7>
+        <table border=1 cellpadding=7 id="data">
+        <thead>
             <tr>
                 <th>Name</th>
                 <th>Date</th>
@@ -17,6 +19,8 @@
                 <th>Gender</th>
                 <th>Race</th>
             </tr>
+         </thead>
+         <tbody>
             {% for obj in object_list %}
             <tr>
                 <td><a href="{{ obj.id }}/">{{ obj.full_name }}</a></td>
@@ -28,7 +32,10 @@
                 <td>{{ obj.race }}</td>
             </tr>
             {% endfor %}
+        </tbody>
         </table>
+        <script type="text/javascript" charset="utf-8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+        <script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
         <script type="text/javascript">
             var map = L.map('map').setView([34.055, -118.35], 9);
             var osmLayer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -56,10 +63,19 @@
             };
             var dataLayer = L.geoJson(data, {
                 onEachFeature: function(feature, layer) {
-                    layer.bindPopup(feature.properties.full_name);
+                    layer.bindPopup(
+                        '<a href="' + feature.properties.id + '/">' +
+                            feature.properties.full_name +
+                        '</a>'
+                    );
                 }
             });
-            map.addLayer(dataLayer);
+            map.addLayer(dataLayer);;
         </script>
+        <script>
+            $(document).ready(function () {
+    	        $('#data').DataTable();
+	        });
+	</script>
     </body>
 </html>
